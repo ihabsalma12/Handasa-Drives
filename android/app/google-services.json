@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1041118896633",
+    "project_id": "handasa-rides",
+    "storage_bucket": "handasa-rides.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1041118896633:android:076a8fecb55f5afd60dd28",
+        "android_client_info": {
+          "package_name": "com.example.demo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCl46LnpCS3npxr8_z4QTwgI6G3rER7KOo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1041118896633:android:35ed8284c28cbd8c60dd28",
+        "android_client_info": {
+          "package_name": "com.example.driver_demo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCl46LnpCS3npxr8_z4QTwgI6G3rER7KOo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
