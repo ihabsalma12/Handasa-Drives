@@ -23,7 +23,17 @@ Future <void> main() async {
           ChangeNotifierProvider.value(value: BottomSheetProvider()),
         ],
         child: MaterialApp(
-          theme: ThemeData(colorScheme: ColorScheme.fromSwatch(), fontFamily: "SometypeMono",),
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue,),
+            useMaterial3: true,
+            brightness: Brightness.light,
+            // primarySwatch: Colors.blue,
+            // primaryColor: Colors.blue,
+            // primaryColorDark: Colors.blue.shade800,
+            // primaryColorLight: Colors.blue.shade300,
+            // scaffoldBackgroundColor: Colors.white,
+
+            fontFamily: "SometypeMono",),
           debugShowCheckedModeBanner: false,
           initialRoute: '/Launch',
           routes:{

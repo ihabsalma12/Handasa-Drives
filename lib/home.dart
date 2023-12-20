@@ -72,8 +72,8 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text("My Profile", style: TextStyle(
-              fontSize:20, fontWeight: FontWeight.bold),),
+          title: Text("My Profile", style: TextStyle(
+              color: Colors.white, fontSize:20, fontWeight: FontWeight.bold),),
           actions: [
             Container(
               margin: const EdgeInsets.all(8.0),
@@ -154,8 +154,10 @@ class _HomePageState extends State<HomePage> {
                   ),
                   backgroundColor: Colors.blueAccent.shade700,
                 ),
-                icon: Icon(Icons.add),
-                label: Text("Add Ride", style: TextStyle(fontWeight: FontWeight.bold),),
+                icon: Icon(Icons.add, color: Theme.of(context).secondaryHeaderColor),
+                label: Text("Create Ride",
+                  style: TextStyle(fontWeight: FontWeight.bold
+                    , color: Theme.of(context).secondaryHeaderColor,),),
               ),
             ),
             Card(
@@ -186,14 +188,14 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 Wrap(
                                   children: [
-                                    Text("pickup: " + documents[index]['from_loc']),
-                                    Text(" @ " + documents[index]['time']),
-                                    Text("status: " + documents[index]['status'], style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColorDark)),
+                                    Text("pickup: ${documents[index]['from_loc']}"),
+                                    Text(" @ ${documents[index]['time']}"),
+                                    Text(" status: ${documents[index]['status']}", style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColorDark)),
                                   ],
                                 ),
                                 Row(
                                   children: [
-                                    ElevatedButton(
+                                    FilledButton(
                                       onPressed: (){
                                         openDialog(documents[index].id);
                                       },
@@ -204,9 +206,12 @@ class _HomePageState extends State<HomePage> {
 
                                     SizedBox(width:10),
 
-                                    ElevatedButton(
+                                    FilledButton(
                                       onPressed: (){
-                                        Navigator.pushNamed(context, "/RouteRiders", arguments: {"id": documents[index].id});
+                                        Navigator.pushNamed(context, "/RouteRiders", arguments: {
+                                          "id": documents[index].id,
+                                          "time": documents[index]['time']
+                                        });
 
                                       },
                                       style: ElevatedButton.styleFrom(

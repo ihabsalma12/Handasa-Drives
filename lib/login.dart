@@ -99,11 +99,11 @@ class _LoginPageState extends State<LoginPage> {
 
                     const SizedBox(height: 30),
                     ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme
-                            .of(context)
-                            .primaryColorDark,
-                      ),
+                      // style: ElevatedButton.styleFrom(
+                      //   backgroundColor: Theme
+                      //       .of(context)
+                      //       .primaryColorDark,
+                      // ),
                       // onPressed: () async {
                       //   if(formKey.currentState!.validate()) {
                       //     try{
@@ -188,8 +188,8 @@ class _LoginPageState extends State<LoginPage> {
     } on FirebaseAuthException catch (e) {
       //TODO this works! but debug statements do not show...
 
-      debugPrint("SALMA! Login error happened:${e.message}");
-      final snackBar = SnackBar(content: Text('SALMA! Login error happened: ${e.toString()}'),);
+      debugPrint("Login error happened:${e.message}");
+      final snackBar = SnackBar(content: Text('Login error happened: ${e.toString()}'),);
       if(context.mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
       // else if (e.code == 'wrong-password') {

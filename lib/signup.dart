@@ -119,7 +119,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         else return null;
                       },
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 20),
                     TextFormField(
                       controller: confirmPassContr,
                       obscureText: true,
@@ -144,11 +144,11 @@ class _SignUpPageState extends State<SignUpPage> {
 
 
 
-                    const SizedBox(height:20,),
+                    const SizedBox(height:30,),
                     ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).primaryColorDark,
-                      ),
+                      // style: ElevatedButton.styleFrom(
+                      //   backgroundColor: Theme.of(context).primaryColorDark,
+                      // ),
                       // onPressed: () async {
                       //   if(signupFormKey.currentState!.validate()){
                       //     try{await authService.createUserWithEmailAndPassword(
@@ -223,8 +223,8 @@ class _SignUpPageState extends State<SignUpPage> {
     } on FirebaseAuthException catch (e) {
       //TODO this works! but debug statements do not show...
 
-      debugPrint("SALMA! Signup error happened:${e.message}");
-      final snackBar = SnackBar(content: Text('SALMA! Signup error happened: ${e.toString()}'),);
+      debugPrint("Signup error happened:${e.message}");
+      final snackBar = SnackBar(content: Text('Signup error happened: ${e.toString()}'),);
       if(context.mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
       // else if (e.code == 'wrong-password') {

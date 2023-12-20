@@ -34,11 +34,20 @@ class _AddPageState extends State<AddPage> {
 
     Future createRoute(routeObj) async{
 
-      final docRoute = await FirebaseFirestore.instance.collection('routes').add(
-          routeObj
-      ).then((DocumentReference doc) =>
-          debugPrint('DocumentSnapshot added with ID: ${doc.id}'));
-
+      try {
+        final docRoute = await FirebaseFirestore.instance.collection('routes')
+            .add(
+            routeObj
+        )
+            .then((DocumentReference doc) =>
+            debugPrint('DocumentSnapshot added with ID: ${doc.id}'));
+            // if(context.mounted)Navigator.of(context).pop(););
+      }
+      on Exception catch (error){
+        debugPrint("Some internal error happened:${error.toString()}");
+        final snackBar = SnackBar(content: Text("Some internal error happened:${error.toString()}"),);
+        if(context.mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
     }
 
     return Scaffold(
@@ -48,6 +57,8 @@ class _AddPageState extends State<AddPage> {
         key: addFormKey,
         child: SingleChildScrollView(
             child: Container(
+                // color: Colors.orange.shade100,
+                // margin: const EdgeInsets.all(0.0),
                 padding: const EdgeInsets.all(30.0),
                 alignment: Alignment.center,
                 child: Column(
