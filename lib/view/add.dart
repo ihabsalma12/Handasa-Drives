@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:driver_demo/BottomSheetProvider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:driver_demo/services/AuthService.dart';
+import 'package:driver_demo/services/BottomSheetProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +29,7 @@ class _AddPageState extends State<AddPage> {
 
 
     // received_data = ModalRoute.of(context)!.settings.arguments as Map;
-
+    final authService = Provider.of<AuthService>(context);
 
 
     Future createRoute(routeObj) async{
@@ -39,8 +39,12 @@ class _AddPageState extends State<AddPage> {
             .add(
             routeObj
         )
-            .then((DocumentReference doc) =>
-            debugPrint('DocumentSnapshot added with ID: ${doc.id}'));
+            .then((DocumentReference doc) {
+          debugPrint('DocumentSnapshot added with ID: ${doc.id}');
+          if(context.mounted) ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Ride created successfully!"),));
+
+            });
             // if(context.mounted)Navigator.of(context).pop(););
       }
       on Exception catch (error){
@@ -73,8 +77,8 @@ class _AddPageState extends State<AddPage> {
                       groupValue: Provider.of<BottomSheetProvider>(context).selectedTime,
                       onChanged: (value) => Provider.of<BottomSheetProvider>(context, listen: false).toggleTime(value),
 
-                      title: Text("7:30 am", style: TextStyle(fontSize: 16),),
-                      subtitle: Text("ride to ASUENG", style: TextStyle(fontStyle: FontStyle.italic),),
+                      title: const Text("7:30 am", style: TextStyle(fontSize: 16),),
+                      subtitle: const Text("ride to ASUENG", style: TextStyle(fontStyle: FontStyle.italic),),
                     ),
                     RadioListTile(
                       activeColor: Colors.orangeAccent,
@@ -84,8 +88,8 @@ class _AddPageState extends State<AddPage> {
                       groupValue: Provider.of<BottomSheetProvider>(context).selectedTime,
                       onChanged: (value) => Provider.of<BottomSheetProvider>(context, listen: false).toggleTime(value),
 
-                      title: Text("5:30 pm", style: TextStyle(fontSize: 16),),
-                      subtitle: Text("ride to somewhere else in Cairo", style: TextStyle(fontStyle: FontStyle.italic),),
+                      title: const Text("5:30 pm", style: TextStyle(fontSize: 16),),
+                      subtitle: const Text("ride to somewhere else in Cairo", style: TextStyle(fontStyle: FontStyle.italic),),
                     ),
                     const SizedBox(height:10),
 
@@ -166,8 +170,8 @@ class _AddPageState extends State<AddPage> {
                         onPressed: (){
                           //add to db
                           if(Provider.of<BottomSheetProvider>(context, listen: false).selectedTime == "<None>"){
-                            final snackBar = SnackBar(content: Text('Please select a time for your ride'),);
-                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Please select a time for your ride'),));
                             return;
                           }
                           else if(addFormKey.currentState!.validate()){
@@ -177,8 +181,8 @@ class _AddPageState extends State<AddPage> {
                               'to_loc' : Provider.of<BottomSheetProvider>(context, listen: false).selectedDestinationLoc,
                               'time' : Provider.of<BottomSheetProvider>(context, listen: false).selectedTime,
                               'price' : priceController.text,
-                              'driver_email' : FirebaseAuth.instance.currentUser!.email,
-                              'driver_name' : FirebaseAuth.instance.currentUser!.displayName,
+                              'driver_email' : authService.getUserEmail(),
+                              'driver_name' : authService.getDisplayName(),
                               'status' : 'accepting requests'
                               // 'stop' : googleAPI
                             };
@@ -187,7 +191,7 @@ class _AddPageState extends State<AddPage> {
                             Navigator.of(context).pop(context);
                           }
                         },
-                        child: Text("Create"))
+                        child: const Text("Create"))
 
                   ],)
             )

@@ -1,6 +1,6 @@
 
-import 'package:driver_demo/DatabaseUserID.dart';
-import 'package:driver_demo/home.dart';
+import 'package:driver_demo/services/AuthService.dart';
+import 'package:driver_demo/services/DatabaseUserID.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +30,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
 
-    // final authService = Provider.of<AuthService>(context);
+    final authService = Provider.of<AuthService>(context);
     final mySQfLite = DatabaseUserID();
 
     return Scaffold(
@@ -173,27 +173,39 @@ class _SignUpPageState extends State<SignUpPage> {
                       //   }
                       //
                       // },
-                      onPressed: () async {
-                        if(signupFormKey.currentState!.validate()) {
-                          if(await createUserWithEmailAndPassword()){
-                            debugPrint("All is good! Logged in.");
+                      onPressed: ()async{
+                        if(signupFormKey.currentState!.validate()){
+                          try{
+                            await authService.createUserWithEmailAndPassword(
+                                fullName: fnameContr.text,
+                                email: signupEmailContr.text, password: signupPassContr.text);
                             setState(() {
                               // mySQfLite.ifExistDB();
                               debugPrint("current user listener updated, now updating local profile data...");
-                              mySQfLite.insertUser(FirebaseAuth.instance.currentUser!.uid, FirebaseAuth.instance.currentUser!.email, FirebaseAuth.instance.currentUser!.displayName);
+                              mySQfLite.insertUser(authService.getUserUID(), authService.getUserEmail(), authService.getDisplayName());
                               // mySQfLite.ifExistDB();
                             });
-                            if(context.mounted) {
-                              Navigator.pushReplacementNamed(context, "/Home");
-                              // mySQfLite.ifExistDB();
-                              // mySQfLite.insertUser(emailContr.text, );
-                              final snackBar = SnackBar(content: Text('Welcome, ${FirebaseAuth.instance.currentUser!.displayName}!'),);
-                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-                            }
+                          }
+                          catch (error){
+                            if(context.mounted)ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Signup error happened: ${error.toString()}'),));
+                            return;
                           }
 
+                          debugPrint("All is good! Signed up.");
+                          if(context.mounted) {
+                            Navigator.pushReplacementNamed(context, "/Home");
+                            // mySQfLite.ifExistDB();
+                            // mySQfLite.insertUser(emailContr.text, );
+                            final snackBar = SnackBar(content: Text('Welcome, ${authService.getDisplayName()}!'),);
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+                          }
+
+
+                          // formKey.currentState!.reset();
                         }
+
                       },
                       child: const Text("Sign up"),
                     ),

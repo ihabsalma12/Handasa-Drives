@@ -1,10 +1,11 @@
-import 'package:driver_demo/BottomSheetProvider.dart';
-import 'package:driver_demo/add.dart';
-import 'package:driver_demo/home.dart';
-import 'package:driver_demo/launch.dart';
-import 'package:driver_demo/login.dart';
-import 'package:driver_demo/route_riders.dart';
-import 'package:driver_demo/signup.dart';
+import 'package:driver_demo/services/AuthService.dart';
+import 'package:driver_demo/services/BottomSheetProvider.dart';
+import 'package:driver_demo/view/add.dart';
+import 'package:driver_demo/view/home.dart';
+import 'package:driver_demo/view/launch.dart';
+import 'package:driver_demo/view/login.dart';
+import 'package:driver_demo/view/route_riders.dart';
+import 'package:driver_demo/view/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +21,9 @@ Future <void> main() async {
   runApp(
     MultiProvider(
         providers: [
+          Provider<AuthService>(
+            create: (_) => AuthService(),
+          ),
           ChangeNotifierProvider.value(value: BottomSheetProvider()),
         ],
         child: MaterialApp(
@@ -37,7 +41,7 @@ Future <void> main() async {
           debugShowCheckedModeBanner: false,
           initialRoute: '/Launch',
           routes:{
-            "/Launch": (context) => LaunchPage(),
+            "/Launch": (context) => const LaunchPage(),
             "/Login": (context) => const LoginPage(),
             "/SignUp": (context) => const SignUpPage(),
             "/Home": (context) => const HomePage(), // to view all my routes

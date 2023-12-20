@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:driver_demo/DatabaseUserID.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:driver_demo/services/AuthService.dart';
+import 'package:driver_demo/services/DatabaseUserID.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 
 
@@ -22,7 +23,7 @@ class _HomePageState extends State<HomePage> {
 
   Future openDialog(String doc_id) => showDialog(context: context, builder: (context) =>
       AlertDialog(
-        title: Text("Update ride status"),
+        title: const Text("Update ride status"),
         content: DropdownButtonFormField <String>(
           // hint:  Text("Select location"),
             value: dialogText,
@@ -59,7 +60,7 @@ class _HomePageState extends State<HomePage> {
             debugPrint('DocumentSnapshot edited with ID: ${doc_id}. New status: ${dialogText}');
             if(context.mounted) Navigator.of(context).pop();
 
-            }, child: Text("Update"))
+            }, child: const Text("Update"))
         ],
       ),
   );
@@ -68,18 +69,19 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
 
+    final authService = Provider.of<AuthService>(context);
     final mySQfLite = DatabaseUserID();
 
     return Scaffold(
         appBar: AppBar(
-          title: Text("My Profile", style: TextStyle(
+          title: const Text("My Profile", style: TextStyle(
               color: Colors.white, fontSize:20, fontWeight: FontWeight.bold),),
           actions: [
             Container(
               margin: const EdgeInsets.all(8.0),
               child: ElevatedButton(
                   onPressed: () async {
-                    await FirebaseAuth.instance.signOut();
+
                     debugPrint("Signing you out!");
                     await mySQfLite.ifExistDB();
                     setState(() {
@@ -88,6 +90,7 @@ class _HomePageState extends State<HomePage> {
                       mySQfLite.removeDB();
                     });
                     await mySQfLite.ifExistDB();
+                    await authService.signOut();
                     if(context.mounted)Navigator.pushReplacementNamed(context, "/Login");
                   },
                   style: ElevatedButton.styleFrom(
@@ -122,8 +125,8 @@ class _HomePageState extends State<HomePage> {
 
                   padding: const EdgeInsets.all(20.0),
                   child: Text(
-                      "${FirebaseAuth.instance.currentUser!.displayName}\n"
-                      "${FirebaseAuth.instance.currentUser!.email}"),
+                      "${authService.getDisplayName()}"
+                          "\n${authService.getUserEmail()}"),
                 // StreamBuilder(stream: authService.user, builder: (_, AsyncSnapshot<Rider?> snapshot){
                   //   if(snapshot.connectionState == ConnectionState.active){
                   //     final Rider? rider = snapshot.data;
@@ -167,7 +170,7 @@ class _HomePageState extends State<HomePage> {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: StreamBuilder(
-                stream: routeCollection.where("driver_email", isEqualTo: FirebaseAuth.instance.currentUser!.email).snapshots(),
+                stream: routeCollection.where("driver_email", isEqualTo: authService.getUserEmail()).snapshots(),
                 builder: (context, snapshot){
                   if (snapshot.hasData){
                     documents = snapshot.data!.docs;
@@ -175,11 +178,11 @@ class _HomePageState extends State<HomePage> {
                     return ListView.builder(
                       itemCount: documents.length,
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         return Container(
                           color: Colors.white70,
-                          margin: EdgeInsets.all(8.0),
+                          margin: const EdgeInsets.all(8.0),
 
                           child: ListTile(
                             title: Text(documents[index]['to_loc']),
@@ -201,10 +204,10 @@ class _HomePageState extends State<HomePage> {
                                       },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Theme.of(context).primaryColorDark),
-                                      child: Text("Update status", style: TextStyle(fontSize: 12),),
+                                      child: const Text("Update status", style: TextStyle(fontSize: 12),),
                                     ),
 
-                                    SizedBox(width:10),
+                                    const SizedBox(width:10),
 
                                     FilledButton(
                                       onPressed: (){
@@ -216,7 +219,7 @@ class _HomePageState extends State<HomePage> {
                                       },
                                       style: ElevatedButton.styleFrom(
                                           backgroundColor: Colors.deepOrange),
-                                      child: Text("View riders", style: TextStyle(fontSize: 12),),)
+                                      child: const Text("View riders", style: TextStyle(fontSize: 12),),)
                                   ],
                                 )
                               ],
@@ -249,7 +252,7 @@ class _HomePageState extends State<HomePage> {
                     return Text("${snapshot.error}");
                   }
                   else{
-                    return CircularProgressIndicator();
+                    return const CircularProgressIndicator();
                   }
 
                 },

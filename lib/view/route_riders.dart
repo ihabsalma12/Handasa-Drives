@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:driver_demo/BottomSheetProvider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:driver_demo/services/BottomSheetProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,26 +20,32 @@ class _RouteRidersPageState extends State<RouteRidersPage> {
 
     //check bypass
     bool bypass = Provider.of<BottomSheetProvider>(context, listen: false).bypassValue;
+
     if(!bypass){
 
       //if the time is constrained, return;
       DateTime currentTime = DateTime.now();
+      debugPrint("BYPASS ride_time:$doc_time while current time = $currentTime");
 
       // time=between 11:30pm & 7:30am for to_loc="Gate3/4"
       DateTime t1 = DateTime(currentTime.year, currentTime.month, currentTime.day, 23, 30); //hr, min, sec
       DateTime t2 = DateTime(currentTime.year, currentTime.month, currentTime.day, 7, 30); //hr, min, sec
+      debugPrint("BYPASS t1 = $t1");
+      debugPrint("BYPASS t2 = $t2");
       if(currentTime.isAfter(t1) && currentTime.isBefore(t2) && doc_time == "7:30 am"){
         if(context.mounted) ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Too late to accept riders."),));
+            const SnackBar(content: Text("Too late to accept riders."),));
         return;
       }
 
       // time=between 4:30pm & 5:30pm for to_loc!="Gate3/4"
-      DateTime t3 = DateTime(currentTime.year, currentTime.month, currentTime.day, 4, 30); //hr, min, sec
-      DateTime t4 = DateTime(currentTime.year, currentTime.month, currentTime.day, 5, 30); //hr, min, sec
-      if(currentTime.isAfter(t1) && currentTime.isBefore(t2) && doc_time == "5:30 pm"){
+      DateTime t3 = DateTime(currentTime.year, currentTime.month, currentTime.day, 16, 30); //hr, min, sec
+      DateTime t4 = DateTime(currentTime.year, currentTime.month, currentTime.day, 17, 30); //hr, min, sec
+      debugPrint("BYPASS t1 = $t3");
+      debugPrint("BYPASS t2 = $t4");
+      if(currentTime.isAfter(t3) && currentTime.isBefore(t4) && doc_time == "5:30 pm"){
         if(context.mounted) ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Too late to accept riders."),));
+            const SnackBar(content: Text("Too late to accept riders."),));
         return;
       }
     }
@@ -73,10 +78,10 @@ class _RouteRidersPageState extends State<RouteRidersPage> {
           child:
           ListView(
             // shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             children: [
 
-              Align(alignment: Alignment.center,child: Text("Bypass time constraint", style: TextStyle(fontWeight:FontWeight.bold),)),
+              const Align(alignment: Alignment.center,child: Text("Bypass time constraint", style: TextStyle(fontWeight:FontWeight.bold),)),
               Switch(
                 value: Provider.of<BottomSheetProvider>(context).bypassValue,
                 onChanged: (bypass) => Provider.of<BottomSheetProvider>(context, listen: false).toggleBypass(bypass),
@@ -90,11 +95,11 @@ class _RouteRidersPageState extends State<RouteRidersPage> {
                       return ListView.builder(
                         itemCount: documents.length,
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
                           return Card(
                             color: Colors.lightBlue.shade100,
-                            margin: EdgeInsets.all(8.0),
+                            margin: const EdgeInsets.all(8.0),
                             child: ListTile(
                               title: Text("${documents[index]['rider_name']}"),
                               isThreeLine: true,
@@ -115,9 +120,9 @@ class _RouteRidersPageState extends State<RouteRidersPage> {
                                               documents[index]['rider_uid']);
                                           debugPrint("rider_uid: ${documents[index]['rider_uid']}, route_id: $doc_id");
                                         },
-                                        child: Text("Accept"),
+                                        child: const Text("Accept"),
                                       ),
-                                      SizedBox(width:10.0),
+                                      const SizedBox(width:10.0),
                                       ElevatedButton(
                                         onPressed: () {
                                           editStatus(
@@ -127,7 +132,7 @@ class _RouteRidersPageState extends State<RouteRidersPage> {
                                               documents[index]['rider_uid']);
                                           debugPrint("rider_uid: ${documents[index]['rider_uid']}, route_id: $doc_id");
                                         },
-                                        child: Text("Reject"),
+                                        child: const Text("Reject"),
                                       ),
                                     ],
                                   )
@@ -135,7 +140,7 @@ class _RouteRidersPageState extends State<RouteRidersPage> {
                                       : Align(
                                     alignment: Alignment.bottomRight,
                                     child: Text("${documents[index]['status']}",
-                                      style: TextStyle(fontWeight: FontWeight.bold, backgroundColor: Colors.orange),),
+                                      style: const TextStyle(fontWeight: FontWeight.bold, backgroundColor: Colors.orange),),
                                   )
                                 ],
                               ),
@@ -151,10 +156,10 @@ class _RouteRidersPageState extends State<RouteRidersPage> {
                       return Text("${snapshot.error}");
                     }
                     else if (!snapshot.hasData){
-                      return Text("No rider bookings.");
+                      return const Text("No rider bookings.");
                     }
                     else{
-                      return CircularProgressIndicator();
+                      return const CircularProgressIndicator();
                     }
                   }
               ),
